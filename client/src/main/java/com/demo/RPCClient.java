@@ -1,15 +1,16 @@
 package com.demo;
 
+import com.demo.client.netty.NettyRPCClient;
 import com.demo.entry.Blog;
 import com.demo.entry.User;
 import com.demo.service.BlogService;
-import com.demo.service.ClientProxy;
+import com.demo.client.ClientProxy;
 import com.demo.service.UserService;
 
 public class RPCClient {
     public static void main(String[] args) {
         try {
-            ClientProxy clientProxy = new ClientProxy("127.0.0.1", 8899);
+            ClientProxy clientProxy = new ClientProxy(new NettyRPCClient("127.0.0.1", 8899));
             UserService userService = clientProxy.getProxy(UserService.class);
             User user = userService.getUserById("99");
             System.out.println("服务端返回的User:"+user);

@@ -4,6 +4,7 @@ package com.demo.service;
 import com.demo.entry.ServiceProvider;
 import com.demo.service.Impl.BlogServiceImpl;
 import com.demo.service.Impl.UserServiceImpl;
+import com.demo.service.netty.NettyRPCServer;
 
 public class RPCServerApp {
     public static void main(String[] args) {
@@ -13,7 +14,7 @@ public class RPCServerApp {
         serviceProvider.provideServiceInterface(userService);
         serviceProvider.provideServiceInterface(blogService);
 
-        RPCServer rpcServer = new ThreadPoolRPCRPCServer(serviceProvider);
+        RPCServer rpcServer = new NettyRPCServer(serviceProvider);
         rpcServer.start(8899);
     }
 }

@@ -1,4 +1,4 @@
-package com.demo.service;
+package com.demo.client;
 
 import com.demo.entry.RPCResponse;
 import com.demo.entry.RPCRequest;
@@ -12,8 +12,7 @@ import java.lang.reflect.Proxy;
 @AllArgsConstructor
 public class ClientProxy implements InvocationHandler {
 
-    private String host;
-    private int port;
+    private RPCClient client;
 
 
     @Override
@@ -22,7 +21,7 @@ public class ClientProxy implements InvocationHandler {
                 .methodName(method.getName())
                 .params(args).paramsTypes(method.getParameterTypes()).build();
         //数据传输
-        RPCResponse response = IOClient.sendRequest(host, port, request);
+        RPCResponse response = client.sendRequest(request);
         System.out.println(response);
         return response.getData();
     }
