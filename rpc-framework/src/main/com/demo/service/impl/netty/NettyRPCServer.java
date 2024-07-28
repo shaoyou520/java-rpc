@@ -1,7 +1,7 @@
 package com.demo.service.impl.netty;
 
 
-import com.demo.entry.ServiceProvider;
+import com.demo.service.impl.ServiceProvider;
 import com.demo.service.RPCServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

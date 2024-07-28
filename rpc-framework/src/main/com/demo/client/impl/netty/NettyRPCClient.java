@@ -3,11 +3,15 @@ package com.demo.client.impl.netty;
 import com.demo.client.RPCClient;
 import com.demo.entry.RPCRequest;
 import com.demo.entry.RPCResponse;
+import com.demo.register.ServiceRegister;
+import com.demo.register.impl.ZkServiceRegister;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
+
+import java.net.InetSocketAddress;
 
 /**
  * 实现RPCClient接口
@@ -17,9 +21,10 @@ public class NettyRPCClient implements RPCClient {
     private static final EventLoopGroup eventLoopGroup;
     private String host;
     private int port;
-    public NettyRPCClient(String host, int port) {
-        this.host = host;
-        this.port = port;
+    private ServiceRegister serviceRegister;
+
+    public NettyRPCClient() {
+        this.serviceRegister = new ZkServiceRegister();
     }
 
     // netty客户端初始化，重复使用
@@ -36,6 +41,9 @@ public class NettyRPCClient implements RPCClient {
     @Override
     public RPCResponse sendRequest(RPCRequest request) {
         try {
+            InetSocketAddress address = serviceRegister.serviceDiscovery(request.getInterfaceName());
+            host = address.getHostName();
+            port = address.getPort();
             ChannelFuture channelFuture  = bootstrap.connect(host, port).sync();
             Channel channel = channelFuture.channel();
             // 发送数据

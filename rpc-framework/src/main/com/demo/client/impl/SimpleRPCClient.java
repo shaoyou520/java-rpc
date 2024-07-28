@@ -4,22 +4,33 @@ package com.demo.client.impl;
 import com.demo.client.RPCClient;
 import com.demo.entry.RPCRequest;
 import com.demo.entry.RPCResponse;
+import com.demo.register.ServiceRegister;
+import com.demo.register.impl.ZkServiceRegister;
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 @AllArgsConstructor
 public class SimpleRPCClient implements RPCClient {
     private String host;
     private int port;
+    private ServiceRegister serviceRegister;
+
+    public SimpleRPCClient() {
+        this.serviceRegister = new ZkServiceRegister();
+    }
 
     // 客户端发起一次请求调用，Socket建立连接，发起请求Request，得到响应Response
     // 这里的request是封装好的，不同的service需要进行不同的封装， 客户端只知道Service接口，需要一层动态代理根据反射封装不同的Service
     public RPCResponse sendRequest(RPCRequest request) {
         try {
+            InetSocketAddress address = serviceRegister.serviceDiscovery(request.getInterfaceName());
+            host = address.getHostName();
+            port = address.getPort();
             Socket socket = new Socket(host, port);
 
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());

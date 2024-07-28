@@ -2,7 +2,7 @@ package com.demo.service.impl.netty;
 
 import com.demo.entry.RPCRequest;
 import com.demo.entry.RPCResponse;
-import com.demo.entry.ServiceProvider;
+import com.demo.service.impl.ServiceProvider;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;

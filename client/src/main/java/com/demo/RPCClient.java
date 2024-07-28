@@ -10,7 +10,7 @@ import com.demo.service.UserService;
 public class RPCClient {
     public static void main(String[] args) {
         try {
-            ClientProxy clientProxy = new ClientProxy(new NettyRPCClient("127.0.0.1", 8899));
+            ClientProxy clientProxy = new ClientProxy(new NettyRPCClient());
             UserService userService = clientProxy.getProxy(UserService.class);
             User user = userService.getUserById("99");
             System.out.println("服务端返回的User:"+user);

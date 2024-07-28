@@ -1,6 +1,6 @@
 package com.demo.service.impl.netty;
 
-import com.demo.entry.ServiceProvider;
+import com.demo.service.impl.ServiceProvider;
 import com.demo.serializer.JsonSerializer;
 import com.demo.serializer.MyDecode;
 import com.demo.serializer.MyEncode;
