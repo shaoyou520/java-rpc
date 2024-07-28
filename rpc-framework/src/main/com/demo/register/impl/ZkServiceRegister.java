@@ -1,11 +1,20 @@
 package com.demo.register.impl;
 
+import com.demo.loadbalance.LoadBalance;
+import com.demo.loadbalance.RoundLoadBalance;
 import com.demo.register.ServiceRegister;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.CuratorCache;
+import org.apache.curator.framework.recipes.cache.CuratorCacheListener;
+import org.apache.curator.framework.recipes.cache.NodeCacheListener;
+import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.springframework.scheduling.annotation.Async;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -16,6 +25,7 @@ public class ZkServiceRegister implements ServiceRegister {
     // zookeeper根路径节点
     private static final String ROOT_PATH = "MyRPC";
     private static String zkHosts = "node1:32181,node2:32181,node3:32181";
+    private LoadBalance loadBalance = new RoundLoadBalance();
 
     // 这里负责zookeeper客户端的初始化，并与zookeeper服务端建立连接
     public ZkServiceRegister(){
@@ -46,13 +56,14 @@ public class ZkServiceRegister implements ServiceRegister {
             System.out.println("此服务已存在");
         }
     }
+
     // 根据服务名返回地址
     @Override
     public InetSocketAddress serviceDiscovery(String serviceName) {
         try {
             List<String> strings = client.getChildren().forPath("/" + serviceName);
             // 这里默认用的第一个，后面加负载均衡
-            String string = strings.get(0);
+            String string = loadBalance.balance(strings);
             return parseAddress(string);
         } catch (Exception e) {
             e.printStackTrace();
