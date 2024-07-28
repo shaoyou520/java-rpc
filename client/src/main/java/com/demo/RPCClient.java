@@ -1,6 +1,8 @@
 package com.demo;
 
+import com.demo.entry.Blog;
 import com.demo.entry.User;
+import com.demo.service.BlogService;
 import com.demo.service.ClientProxy;
 import com.demo.service.UserService;
 
@@ -13,6 +15,9 @@ public class RPCClient {
             System.out.println("服务端返回的User:"+user);
             user = userService.getUserById("100");
             System.out.println("服务端返回的User:"+user);
+            BlogService blogService = clientProxy.getProxy(BlogService.class);
+            Blog blog = blogService.getBlogById(97);
+            System.out.println("服务端返回的User:"+ blog);
 
         } catch (Exception e) {
             e.printStackTrace();
