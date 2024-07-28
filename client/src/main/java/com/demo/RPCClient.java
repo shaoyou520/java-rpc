@@ -14,11 +14,6 @@ public class RPCClient {
             UserService userService = clientProxy.getProxy(UserService.class);
             User user = userService.getUserById("99");
             System.out.println("服务端返回的User:"+user);
-            user = userService.getUserById("100");
-            System.out.println("服务端返回的User:"+user);
-            BlogService blogService = clientProxy.getProxy(BlogService.class);
-            Blog blog = blogService.getBlogById(97);
-            System.out.println("服务端返回的User:"+ blog);
 
         } catch (Exception e) {
             e.printStackTrace();

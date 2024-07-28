@@ -17,7 +17,8 @@ public class ClientProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        RPCRequest request = RPCRequest.builder().interfaceName(method.getDeclaringClass().getName())
+        RPCRequest request = RPCRequest.builder().interfaceName(
+                method.getDeclaringClass().getName())
                 .methodName(method.getName())
                 .params(args).paramsTypes(method.getParameterTypes()).build();
         //数据传输
