@@ -1,9 +1,12 @@
 package com.demo.serializer;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.demo.entry.RPCRequest;
 import com.demo.entry.RPCResponse;
+
+import java.util.List;
 
 /**
  * 由于json序列化的方式是通过把对象转化成字符串，丢失了Data对象的类信息，所以deserialize需要
@@ -43,8 +46,12 @@ public class JsonSerializer implements Serializer{
             case 1:
                 RPCResponse response = JSON.parseObject(bytes, RPCResponse.class);
                 Class<?> dataType = response.getDataType();
-                if(! dataType.isAssignableFrom(response.getData().getClass())){
-                    response.setData(JSONObject.toJavaObject((JSONObject) response.getData(),dataType));
+                if(response.getData() != null && !dataType.isAssignableFrom(response.getData().getClass())){
+                    if(List.class.isAssignableFrom(response.getData().getClass())) {
+                        response.setData(JSONArray.toJavaObject((JSONArray) response.getData(), List.class));
+                    } else {
+                        response.setData(JSONObject.toJavaObject((JSONObject) response.getData(), dataType));
+                    }
                 }
                 obj = response;
                 break;

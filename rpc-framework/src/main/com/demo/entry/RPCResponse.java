@@ -20,6 +20,9 @@ public class RPCResponse implements Serializable {
     private Class<?> dataType;
 
     public static RPCResponse success(Object data) {
+        if (data == null) {
+            return RPCResponse.builder().code(200).data(data).build();
+        }
         return RPCResponse.builder().code(200).dataType(data.getClass()).data(data).build();
     }
     public static RPCResponse fail() {
