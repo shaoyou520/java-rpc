@@ -1,6 +1,7 @@
-package com.demo.client;
+package com.demo.client.impl;
 
 
+import com.demo.client.RPCClient;
 import com.demo.entry.RPCRequest;
 import com.demo.entry.RPCResponse;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 @AllArgsConstructor
-public class SimpleRPCClient implements RPCClient{
+public class SimpleRPCClient implements RPCClient {
     private String host;
     private int port;
 

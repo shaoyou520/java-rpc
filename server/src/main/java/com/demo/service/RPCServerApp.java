@@ -4,7 +4,7 @@ package com.demo.service;
 import com.demo.entry.ServiceProvider;
 import com.demo.service.Impl.BlogServiceImpl;
 import com.demo.service.Impl.UserServiceImpl;
-import com.demo.service.netty.NettyRPCServer;
+import com.demo.service.impl.netty.NettyRPCServer;
 
 public class RPCServerApp {
     public static void main(String[] args) {

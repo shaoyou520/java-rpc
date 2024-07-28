@@ -1,39 +1,42 @@
-package com.demo.service.netty;
+package com.demo.service.impl;
 
 import com.demo.entry.RPCRequest;
 import com.demo.entry.RPCResponse;
 import com.demo.entry.ServiceProvider;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.Socket;
 
-/**
- * 因为是服务器端，我们知道接受到请求格式是RPCRequest
- * Object类型也行，强制转型就行
- */
 @AllArgsConstructor
-public class NettyRPCServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
+public class WorkThread implements Runnable {
+    private Socket socket;
     private ServiceProvider serviceProvider;
 
-
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RPCRequest msg) throws Exception {
-        //System.out.println(msg);
-        RPCResponse response = getResponse(msg);
-        ctx.writeAndFlush(response);
-        ctx.close();
+    public void run() {
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            // 读取客户端传过来的request
+            RPCRequest request = (RPCRequest) ois.readObject();
+
+            // 反射调用服务方法获得返回值
+            RPCResponse response = getResponse(request);
+            //写入到客户端
+            oos.writeObject(response);
+            oos.flush();
+        }catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+            System.out.println("从IO中读取数据错误");
+        }
     }
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
-        ctx.close();
-    }
-
-    RPCResponse getResponse(RPCRequest request) {
+    private RPCResponse getResponse(RPCRequest request){
         // 得到服务名
         String interfaceName = request.getInterfaceName();
         // 得到服务端相应服务实现类

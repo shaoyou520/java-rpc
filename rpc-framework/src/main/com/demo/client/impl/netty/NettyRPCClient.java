@@ -1,4 +1,4 @@
-package com.demo.client.netty;
+package com.demo.client.impl.netty;
 
 import com.demo.client.RPCClient;
 import com.demo.entry.RPCRequest;

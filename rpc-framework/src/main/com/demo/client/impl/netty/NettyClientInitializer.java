@@ -1,4 +1,4 @@
-package com.demo.client.netty;
+package com.demo.client.impl.netty;
 
 import com.demo.serializer.JsonSerializer;
 import com.demo.serializer.MyDecode;

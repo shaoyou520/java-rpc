@@ -1,8 +1,8 @@
-package com.demo.client;
+package com.demo.client.impl;
 
+import com.demo.client.RPCClient;
 import com.demo.entry.RPCResponse;
 import com.demo.entry.RPCRequest;
-import com.demo.util.IOClient;
 import lombok.AllArgsConstructor;
 
 import java.lang.reflect.InvocationHandler;
